@@ -15,13 +15,13 @@ github地址：[https://github.com/ScutGame/Scut](https://github.com/ScutGame/Sc
 * 游戏工程lib库增加  ScutSDK.lib
 * appdelegate.cpp 增加头文件 #include "ScutExt.h"
 * appdelegate.cpp 增加函数 
-```c++
+	```c++
 static void initLuaGlobalVariables(const std::string& entry)
 {
 	auto pEngine = LuaEngine::getInstance();
 	LuaStack* pStack = pEngine->getLuaStack();
 	FileUtils* pFileUtils = FileUtils::getInstance();
-	using namespace std;
+	using namespace std; 
 	string path = pFileUtils->fullPathForFilename(entry.c_str());
 	int pos = string::npos;
 	while ((pos = path.find_first_of("\\")) != string::npos)
@@ -42,4 +42,26 @@ static void initLuaGlobalVariables(const std::string& entry)
 	ScutExt::Init(root_dir + "/");
 }
 ```
-
+* 增加调用
+	
+	```c++
+initLuaGlobalVariables("src/main.lua");
+if (engine->executeScriptFile("src/main.lua"))
+{
+	return;
+}
+```
+
+#android编译
+* 修改frameworks\runtime-src\ScutSDK\proj.android\Android.mk 把LOCAL_C_INCLUDES 中 cocos 相关路径全部增加一次..
+
+* 修改frameworks\runtime-src\proj.android\jni\Android.mk 增加
+
+	```LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../ScutSDK```
+
+	```LOCAL_STATIC_LIBRARIES += scutsdk_static```
+
+	```$(call import-module,../runtime-src/ScutSDK\proj.android)```到相应位置
+
+* 修改frameworks\cocos2d-x\cocos\Android.mk 打开curl的开关
+	```$(call import-module,curl/prebuilt/android)```
