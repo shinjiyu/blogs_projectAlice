@@ -4,7 +4,7 @@ github地址：[https://github.com/ScutGame/Scut](https://github.com/ScutGame/Sc
 ##代码物理部署
 * SDK/ScutSDK  目录考贝到项目工程路径 frameworks\runtime-src\ 下
 	*SDK自带文档建议考贝到 frameworks\ 下，并不建议这样做。
-* res 下新建ScutRes 目录，用于存放协议相关lua ,新建两个文件[NetHelper.lua]() [ScutManager.lua]()
+* res 下新建ScutRes 目录，用于存放协议相关lua ,新建两个文件[NetHelper.lua](https://github.com/shinjiyu/blogs_projectAlice/blob/master/scut/NetHelper.lua) [ScutManager.lua](https://github.com/shinjiyu/blogs_projectAlice/blob/master/scut/ScutManager.lua)
 
 ##win32编译（IDE VS2015)
 * 导入ScutSDK工程 frameworks\runtime-src\ScutSDK\proj.win32\ScutSDK.vcxproj
