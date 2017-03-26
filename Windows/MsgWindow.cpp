@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "MsgWindow.h"
 #define CLOSE_WINDOW_TIMEOUT 5000
 
@@ -16,9 +15,10 @@ DWORD WINAPI ThreadMethod(LPVOID lpParameter)//执行线程任务的函数
 {
 	MsgWnd* pWnd = (MsgWnd*)lpParameter;
 
-	HWND hwnd = pWnd->Create(NULL, NULL, _T("Test_Shinjiyu"), WS_POPUP);
+	HWND hwnd = pWnd->Create(NULL, NULL, pWnd->GetWindowName(), WS_POPUP);
 	DWORD dwResult = GetLastError();
 	
+	SetEvent(pWnd->GetCreateWndOKEvent());
 	MSG msg;
 	while (::GetMessage(&msg, NULL, 0, 0))
 	{
@@ -32,6 +32,7 @@ DWORD WINAPI ThreadMethod(LPVOID lpParameter)//执行线程任务的函数
 
 MsgWnd::MsgWnd()
 {
+	m_CreateWndOK = CreateEvent(NULL, True, FALSE, NULL);
 }
 
 MsgWnd::~MsgWnd()
@@ -40,14 +41,20 @@ MsgWnd::~MsgWnd()
 	{
 		FreeItem(PopWithValue());
 	}
+
+	if (m_CreateWndOK)
+	{
+		CloseHandle(m_CreateWndOK);
+		m_CreateWndOK = NULL;
+	}
 }
 
-bool MsgWnd::Run()
+bool MsgWnd::Run(const TCHAR* szName)
 {
 	DWORD dwThreadID = 0;//保存线程ID 
-
+	m_WindowName = szName;
 	m_thread = CreateThread(0, 0, ThreadMethod, (LPVOID)this, 0, &dwThreadID);//创建线程 
-
+	WaitForSingleObject(m_CreateWndOK, INFINITE);
 	return m_thread != NULL;
 }
 

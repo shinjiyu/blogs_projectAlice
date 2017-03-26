@@ -19,12 +19,15 @@ public:
 		MESSAGE_RANGE_HANDLER(WM_USER, WM_APP, OnMsg);
 	END_MSG_MAP()
 
-	bool Run();
+	bool Run(const TCHAR* szName);
 	bool Stop();
 
 	void FreeItem(COPYDATASTRUCT& st);
 
-
+	HANDLE GetCreateWndOKEvent(){ return m_CreateWndOK; };
+	const TCHAR* GetWindowName() {
+		return m_WindowName.c_str();
+	}
 private:
 	LRESULT OnMsg(UINT nMsg, WPARAM wParam,
 		LPARAM lParam, BOOL& bHandled);
@@ -35,7 +38,9 @@ private:
 	LRESULT OnCopyData(UINT nMsg, WPARAM wParam,
 		LPARAM lParam, BOOL& bHandled);
 	HANDLE m_thread;
+	HANDLE m_CreateWndOK;
 
+	std::wstring m_WindowName;
 };
 
 
